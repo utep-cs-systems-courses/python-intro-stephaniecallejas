@@ -9,58 +9,53 @@
 
 import string
 import sys
-
-
-if len(sys.argv) != 3:
-   # print("")
-
-    print("Correct usage: wordCountTest.py <input text file> <output text file>")
-    exit()
+import re
 
 input_File = sys.argv[1]
 output_File = sys.argv[2]
 
-# Open the file in read mode
-#text = open("declaration.txt", "r")
-with open(input_File, 'r') as inputFile:
 
-# Create an empty dictionary
-    d = dict()
+if __name__ == '__main__':
+    if len(sys.argv) != 3:
+        print("Correct usage: wordCount.py <input text file> <output file>")
+        exit()
 
-# Loop through each line of the file
-    for line in inputFile:
-    # Remove the leading spaces and newline character
-        line = line.strip()
+    # attempt to open input file and write in it
+    with open(input_File, 'r') as inputFile:
 
-    # Convert the characters in line to
-    # lowercase to avoid case mismatch
-        line = line.lower()
+        # Create an empty dictionary
+        d = dict()
 
-    # Remove the punctuation marks from the line
-        line = line.translate(line.maketrans(" ", " ", string.punctuation))
+        for line in inputFile:
+            # Remove the leading spaces and newline character
+            line = line.strip()
 
-    # Split the line into words
-        words = line.split(" ")
+            # Convert the characters in line to lowercase to avoid case mismatch
+            line = line.lower()
+            line = re.sub("-", " ", line)
 
-    # Iterate over each word in line
-    for word in words:
-        if word is "":
-            break
-            # Check if the word is already in dictionary
-        if word in d:
-            # Increment count of word by 1
-            d[word] = d[word] + 1
-        else:
-            # Add the word to dictionary with count 1
-            d[word] = 1
+            # Remove the punctuation marks from the line and hy
+            line = re.sub(r"[,.;@#?!&$]+\ *", " ", line)
+            line = line.translate(line.maketrans("", "", string.punctuation))
 
-# Print the contents of dictionary
-sorted(d.keys())
-text = open(output_File, "w+")
-#with open(output_File, "w") as outputFile:
-for key in sorted(d.keys()):
-    text.write(key + " " + str(d[key]) + "\n")
-        #print(key, ":", d[key])
-text.close()
+            # split line on whitespace and punctuation
+            words = re.split('[ \t]', line)
 
-#outputFile.write(word + " " + str(d[word]) + "\n")
+            # print(words)
+            for word in words:
+                if word == "":
+                    break
+                if word in d:
+                    d[word] = d[word] + 1
+                else:
+                    d[word] = 1
+
+    sorted(d.keys())
+    text = open(output_File, "w+")
+    with open(output_File, "w+")as outputFile:
+        for key in sorted(d.keys()):
+            text.write(key + " " + str(d[key]) + "\n")
+    text.close()
+
+
+
